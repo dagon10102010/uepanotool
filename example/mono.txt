@@ -17,8 +17,8 @@ plane left -90 0 0 90 3000 3000
 plane right 90 0 0 90 3000 3000
 # plane top 0 90 0 90 3000 3000
 # plane bottom 0 -90 0 90 3000 3000
-plane pl 45 0 0 90 3000 3000
-plane pr 315 0 0 90 3000 3000
+plane pl 315 0 0 90 3000 3000
+plane pr 45 0 0 90 3000 3000
 
 
 loop 1 2
@@ -28,8 +28,8 @@ input left example/mono/left.%04d.png
 input right example/mono/right.%04d.png
 # input top example/mono/top.%04d.png
 # input bottom example/mono/bottom.%04d.png
-output example/mono_noblend.%04d.tif
-output example/mono_noblend.%04d.jpg
+output example/mono_nopatch.%04d.tif
+output example/mono_nopatch.%04d.jpg
 
 input pl example/mono/Front_left.%04d.png
 input pr example/mono/front_right.%04d.png

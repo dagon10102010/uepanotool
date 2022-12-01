@@ -1,4 +1,9 @@
 
+# Video
+render 360 video:  https://youtu.be/KS2cnkWNnAU
+render 360 video:  https://youtu.be/T3wn0UsrqXA
+render 360 stereo photo : https://youtu.be/sSnUspt9Vig
+
 # Use
 run uestitch.exe or uestitch.exe -script `scriptpath` 
 
