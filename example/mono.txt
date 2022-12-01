@@ -1,0 +1,38 @@
+width 8192
+height 4096
+ss 1
+fixedge 1
+
+# input example/mono/front.0001.png 0 0 0 90
+# input example/mono/left.0001.png -90 0 0 90
+input example/mono/back.0001.png 180 0 0 90
+# input example/mono/right.0001.png 90 0 0 90
+input example/mono/top.0001.png 0 90 0 90
+input example/mono/bottom.0001.png 0 -90 0 90
+
+
+plane front 0 0 0 90 3000 3000
+plane left -90 0 0 90 3000 3000
+# plane back 180 0 0 90 3000 3000
+plane right 90 0 0 90 3000 3000
+# plane top 0 90 0 90 3000 3000
+# plane bottom 0 -90 0 90 3000 3000
+plane pl 45 0 0 90 3000 3000
+plane pr 315 0 0 90 3000 3000
+
+
+loop 1 2
+input front example/mono/front.%04d.png
+input left example/mono/left.%04d.png
+# input back example/mono/back.%04d.png
+input right example/mono/right.%04d.png
+# input top example/mono/top.%04d.png
+# input bottom example/mono/bottom.%04d.png
+output example/mono_noblend.%04d.tif
+output example/mono_noblend.%04d.jpg
+
+input pl example/mono/Front_left.%04d.png
+input pr example/mono/front_right.%04d.png
+output example/mono.%04d.tif
+output example/mono.%04d.jpg
+endloop
