@@ -1,12 +1,16 @@
 
 # Video
-render 360 video:  https://youtu.be/KS2cnkWNnAU
-render 360 video:  https://youtu.be/T3wn0UsrqXA
+
+video render 360 part 1 :  https://youtu.be/KS2cnkWNnAU
+
+video render 360 part 2:  https://youtu.be/T3wn0UsrqXA
+
 render 360 stereo photo : https://youtu.be/sSnUspt9Vig
 
 # Use
 run uestitch.exe or uestitch.exe -script `scriptpath` 
 
+# Script syntax
 - `#....` : comment
 - `width 8192` : set output width
 - `height 4096` : set output height ( = width/2)
