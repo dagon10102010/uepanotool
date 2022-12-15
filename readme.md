@@ -7,6 +7,9 @@ video render 360 part 2:  https://youtu.be/T3wn0UsrqXA
 
 render 360 stereo photo : https://youtu.be/sSnUspt9Vig
 
+# Contact
+discord:  trungngo#6572
+
 # Use
 run uestitch.exe or uestitch.exe -script `scriptpath` 
 
