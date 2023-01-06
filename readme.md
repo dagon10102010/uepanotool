@@ -13,6 +13,28 @@ discord:  trungngo#6572
 # Use
 run uestitch.exe or uestitch.exe -script `scriptpath` 
 
+# Render
+
+In postprocesssetting:
+- disable viggnet
+- disable autoexposure (eye adaption)
+- disable motion blur
+- disable lensflare
+- disable film grain
+
+Number face render :
+- 6 faces fov 90 : 1 pitch 90, 4 pitch 0, 1 pitch -90
+- 26 faces fov 90 : 1 pitch 90, 8 pitch 45, 8 pitch 0, 8 pitch -45, 1 pitch -90
+- 34 faces fov 68 : 2 pitch 75, 8 pitch 50, 8 pitch 18, 8 pitch -18, 8 pitch -50, 2 pitch -75
+- custom render : any style
+
+# Reslove some problem
+- thin seam line dark in ue 5.0 : add fixedge 1 to remove 1 pixel border dark in input image
+- seam in reflect material (screen space reflect) : render add 1 more sequence look at seam area
+
+
+
+
 # Script syntax
 - `#....` : comment
 - `width 8192` : set output width
@@ -35,3 +57,5 @@ run uestitch.exe or uestitch.exe -script `scriptpath`
 - `loop 219 500`: start loop block from 219 to 500
 - `endloop` : end loop
 - `output test/output/%04d.png`  : save to format(test/output/%04d.png,i) in loop 
+
+![example](example.jpg)
