@@ -68,7 +68,9 @@ function Stitch {
         $max
         
     )
-    Remove-Item .\Saved\MovieRenders -Recurse -Force
+    if(Test-Path .\Saved\MovieRenders){
+        Remove-Item .\Saved\MovieRenders -Recurse -Force
+    }
     
     $config = $data.data
     $fov = $config.fov
