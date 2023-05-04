@@ -1,3 +1,5 @@
+<strong>Notice</strong>: this folder is deprecated. Please use UnrealPlugin instead in here : [UnrealPlugin](../UnrealPlugin)
+
 # Requirements
 
 - Unreal Engine 5.1 or above

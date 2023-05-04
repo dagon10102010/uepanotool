@@ -1,0 +1,58 @@
+width 11460
+height 7640
+projector 2
+plane s0 0.000000 90.000000 0 90.000000 3820 3820
+plane s1 0.000000 45.000000 0 90.000000 3820 3820
+plane s2 45.000000 45.000000 0 90.000000 3820 3820
+plane s3 90.000000 45.000000 0 90.000000 3820 3820
+plane s4 135.000000 45.000000 0 90.000000 3820 3820
+plane s5 180.000000 45.000000 0 90.000000 3820 3820
+plane s6 225.000000 45.000000 0 90.000000 3820 3820
+plane s7 270.000000 45.000000 0 90.000000 3820 3820
+plane s8 315.000000 45.000000 0 90.000000 3820 3820
+plane s9 0.000000 0.000000 0 90.000000 3820 3820
+plane s10 45.000000 0.000000 0 90.000000 3820 3820
+plane s11 90.000000 0.000000 0 90.000000 3820 3820
+plane s12 135.000000 0.000000 0 90.000000 3820 3820
+plane s13 180.000000 0.000000 0 90.000000 3820 3820
+plane s14 225.000000 0.000000 0 90.000000 3820 3820
+plane s15 270.000000 0.000000 0 90.000000 3820 3820
+plane s16 315.000000 0.000000 0 90.000000 3820 3820
+plane s17 0.000000 -45.000000 0 90.000000 3820 3820
+plane s18 45.000000 -45.000000 0 90.000000 3820 3820
+plane s19 90.000000 -45.000000 0 90.000000 3820 3820
+plane s20 135.000000 -45.000000 0 90.000000 3820 3820
+plane s21 180.000000 -45.000000 0 90.000000 3820 3820
+plane s22 225.000000 -45.000000 0 90.000000 3820 3820
+plane s23 270.000000 -45.000000 0 90.000000 3820 3820
+plane s24 315.000000 -45.000000 0 90.000000 3820 3820
+plane s25 0.000000 -90.000000 0 90.000000 3820 3820
+input s0 Saved/MovieRenders/center.0.0001.png
+input s1 Saved/MovieRenders/center.0.0003.png
+input s2 Saved/MovieRenders/center.0.0005.png
+input s3 Saved/MovieRenders/center.0.0007.png
+input s4 Saved/MovieRenders/center.0.0009.png
+input s5 Saved/MovieRenders/center.0.0011.png
+input s6 Saved/MovieRenders/center.0.0013.png
+input s7 Saved/MovieRenders/center.0.0015.png
+input s8 Saved/MovieRenders/center.0.0017.png
+input s9 Saved/MovieRenders/center.0.0019.png
+input s10 Saved/MovieRenders/center.0.0021.png
+input s11 Saved/MovieRenders/center.0.0023.png
+input s12 Saved/MovieRenders/center.0.0025.png
+input s13 Saved/MovieRenders/center.0.0027.png
+input s14 Saved/MovieRenders/center.0.0029.png
+input s15 Saved/MovieRenders/center.0.0031.png
+input s16 Saved/MovieRenders/center.0.0033.png
+input s17 Saved/MovieRenders/center.0.0035.png
+input s18 Saved/MovieRenders/center.0.0037.png
+input s19 Saved/MovieRenders/center.0.0039.png
+input s20 Saved/MovieRenders/center.0.0041.png
+input s21 Saved/MovieRenders/center.0.0043.png
+input s22 Saved/MovieRenders/center.0.0045.png
+input s23 Saved/MovieRenders/center.0.0047.png
+input s24 Saved/MovieRenders/center.0.0049.png
+input s25 Saved/MovieRenders/center.0.0051.png
+output Saved/MovieRenders_output/PanoHotspot1.tif
+output Saved/MovieRenders_output/PanoHotspot1.jpg
+clear
