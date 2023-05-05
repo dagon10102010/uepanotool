@@ -1,0 +1,54 @@
+{
+    "data": [
+        {
+            "name": "mono6",
+            "stereo": false,
+            "fov": 90,
+            "horizontalStep": [1,4,1],
+            "horizontalPitch": [90,0,-90],
+            "basewidth": 20,
+            "baseheight": 20,
+            "total": 6
+        },
+        {
+            "name": "mono26",
+            "stereo": false,
+            "fov": 90,
+            "horizontalStep": [1,8,8,8,1],
+            "horizontalPitch": [90,45,0,-45,-90],
+            "basewidth": 20,
+            "baseheight": 20,
+            "total": 26
+        },
+        {
+            "name": "mono36",
+            "stereo": false,
+            "fov": 68,
+            "horizontalStep": [2,8,8,8,8,2],
+            "horizontalPitch": [75,50,18,-18,-50,-75],
+            "basewidth": 30,
+            "baseheight": 20,
+            "total": 36
+        },
+        {
+            "name": "stereo240",
+            "stereo": true,
+            "fov": 6,
+            "horizontalStep": [48,72,72,48],
+            "horizontalPitch": [67.5,22.5,-22.5,-67.5],
+            "basewidth": 10,
+            "baseheight": 80,
+            "total": 240
+        },
+        {
+            "name": "stereo2160",
+            "stereo": true,
+            "fov": 2,
+            "horizontalStep": [180,180,180,180,180,180,180,180,180,180,180,180],
+            "horizontalPitch": [82.5,67.5,52.5,37.5,22.5,7.5,-7.5,-22.5,-37.5,-52.5,-67.5,-82.5],
+            "basewidth": 10,
+            "baseheight": 150,
+            "total": 2160
+        }
+    ]
+}

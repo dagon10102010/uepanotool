@@ -3,6 +3,10 @@
 
 - Unreal Engine 5.1 or above
 
+# Youtube
+
+https://youtu.be/LHEtMplRv_0
+
 # Install
 
 - Download UEPanoTool.zip from lastest release

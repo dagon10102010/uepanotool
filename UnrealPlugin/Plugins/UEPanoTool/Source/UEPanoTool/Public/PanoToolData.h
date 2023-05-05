@@ -46,6 +46,7 @@ struct UEPANOTOOL_API FPanoCaptureStyle {
 	FString GetEyeName(int slice);
 	FVector GetPos(int slice);
 	FVector GetRotate(int slice);
+	
     
 	FPanoCaptureStyle(){}
 
@@ -92,6 +93,18 @@ struct UEPANOTOOL_API FPanoCaptureConfig {
     UPROPERTY()
 	int projector=0;
 
+	UPROPERTY()
+	bool clearImg=false;
+
+	UPROPERTY()
+	bool jpg=false;
+
+	UPROPERTY()
+	bool png=false;
+
+	UPROPERTY()
+	bool tiff=false;
+
     UPROPERTY()
     FPanoCaptureStyle data = FPanoCaptureStyle();
 
@@ -99,6 +112,7 @@ struct UEPANOTOOL_API FPanoCaptureConfig {
 
     void Save(FString filepath=L"");
     void Load(FString filepath=L"");
+	bool IsFrontFace(int slice);
    
 };
 

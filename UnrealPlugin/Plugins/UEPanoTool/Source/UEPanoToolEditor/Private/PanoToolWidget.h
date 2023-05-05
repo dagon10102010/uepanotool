@@ -29,8 +29,6 @@ private:
 	TArray<TSharedPtr<FString>> OutputStrings;
 	FPanoCaptureStyleData captureStyleData = FPanoCaptureStyleData();
 	FPanoCaptureConfig captureConfig = FPanoCaptureConfig();
-	int outputWidth = 4096;
-	int step = 2;
 
 	FReply TestClick();
 	
@@ -42,6 +40,11 @@ private:
 	void OnChangeOutput( TSharedPtr<FString> NewSelection, ESelectInfo::Type SelectInfo );
 	void OnChangeWidth(int width);
 	void OnChangeStep(int s);
+	void OnChangeDeleteImg( ECheckBoxState state);
+	void OnChangeTif( ECheckBoxState state);
+	void OnChangeJpg( ECheckBoxState state);
+	
+	
 	void GenSequence();
 	void ResetSequence();
 	void SaveVideoScriptFile();

@@ -43,6 +43,12 @@ FVector FPanoCaptureStyle::GetRotate(int slice){
     }
     return FVector(0);
 }
+bool FPanoCaptureConfig::IsFrontFace(int slice){
+    FVector r = data.GetRotate(slice);
+    if(projector==3||projector==4)
+        return r.Z<=90 || r.Z>=270;
+    return true;
+}
 void FPanoCaptureConfig::Save(FString filepath){
     FString s;
     FString fPath = FPaths::Combine(FPaths::ProjectPluginsDir(),L"UEPanoTool/Tool/capture.config");

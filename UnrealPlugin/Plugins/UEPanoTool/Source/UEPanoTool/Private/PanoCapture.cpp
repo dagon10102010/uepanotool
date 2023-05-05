@@ -5,14 +5,17 @@
 #include "UObject/ConstructorHelpers.h"
 #include "MoviePipelineOutputSetting.h"
 #include "Kismet/GameplayStatics.h"
+
 // Fill out your copyright notice in the Description page of Project Settings.
 // Sets default values
 APanoCapture::APanoCapture()
 {
-	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
-	SetRootComponent(SceneComponent);
-    CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
-	CameraComponent->AttachToComponent(SceneComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	// SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
+	// SetRootComponent(SceneComponent);
+    // CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
+	// CameraComponent->AttachToComponent(SceneComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	CameraComponent = this->GetCameraComponent();
+	CameraComponent->bConstrainAspectRatio = false;
     CameraComponent->PostProcessSettings.AutoExposureMethod = EAutoExposureMethod::AEM_Manual;
     CameraComponent->PostProcessSettings.AutoExposureBias = 10;
 	CameraComponent->PostProcessSettings.VignetteIntensity = 0;
@@ -41,10 +44,18 @@ APanoCapture::APanoCapture()
 	levelSequence = renderseq.Object;
 	static ConstructorHelpers::FObjectFinder<ULevelSequence> renderseqvideo(TEXT("/UEPanoTool/Animation/renderseqvideo"));
 	levelSequenceVideo = renderseqvideo.Object;
-	static ConstructorHelpers::FObjectFinder<UMoviePipelineMasterConfig> renderconfig(TEXT("/UEPanoTool/Animation/renderconfig"));
+#if ENGINE_MINOR_VERSION == 1
+    static ConstructorHelpers::FObjectFinder<UMoviePipelineMasterConfig> renderconfig(TEXT("/UEPanoTool/Animation/renderconfig"));
 	moviePipelineMasterConfig = renderconfig.Object;
 	static ConstructorHelpers::FObjectFinder<UMoviePipelineMasterConfig> renderconfigvideo(TEXT("/UEPanoTool/Animation/renderconfigvideo"));
 	moviePipelineMasterConfigVideo = renderconfigvideo.Object;
+#else //2
+	static ConstructorHelpers::FObjectFinder<UMoviePipelinePrimaryConfig> renderconfig(TEXT("/UEPanoTool/Animation/renderconfig"));
+	moviePipelineMasterConfig = renderconfig.Object;
+	static ConstructorHelpers::FObjectFinder<UMoviePipelinePrimaryConfig> renderconfigvideo(TEXT("/UEPanoTool/Animation/renderconfigvideo"));
+	moviePipelineMasterConfigVideo = renderconfigvideo.Object;
+#endif
+	
 }
 
 void APanoCapture::BeginPlay()

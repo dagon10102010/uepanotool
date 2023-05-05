@@ -3,16 +3,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Camera/CameraActor.h"
 #include "PanoCapture.generated.h"
 class UCameraComponent;
 struct FPanoCaptureConfig;
 class UMoviePipelineQueueEngineSubsystem;
 class ULevelSequence;
-class UMoviePipelineMasterConfig;
+#if ENGINE_MINOR_VERSION == 1
+    class UMoviePipelineMasterConfig;
+#else //2
+	class UMoviePipelinePrimaryConfig;
+#endif
+
 
 UCLASS()
-class UEPANOTOOL_API APanoCapture : public AActor
+class UEPANOTOOL_API APanoCapture : public ACameraActor
 {
 	GENERATED_BODY()
 	
@@ -31,17 +36,24 @@ protected:
 	void OnRenderFinish(FMoviePipelineOutputData Results);
 
 private:
-	UPROPERTY()
-    class USceneComponent* SceneComponent;
-	UPROPERTY(VisibleDefaultsOnly)
+	// UPROPERTY()
+    // class USceneComponent* SceneComponent;
+	// UPROPERTY(VisibleDefaultsOnly)
 	class UCameraComponent* CameraComponent;
 
 	FPanoCaptureConfig* captureConfig = nullptr;
 	UMoviePipelineQueueEngineSubsystem* moviePipelineSubsystem = nullptr;
 	ULevelSequence * levelSequence = nullptr;
 	ULevelSequence * levelSequenceVideo = nullptr;
-	UMoviePipelineMasterConfig * moviePipelineMasterConfigVideo = nullptr;
+
+#if ENGINE_MINOR_VERSION == 1
+    UMoviePipelineMasterConfig * moviePipelineMasterConfigVideo = nullptr;
 	UMoviePipelineMasterConfig * moviePipelineMasterConfig = nullptr;
+#else //2
+	UMoviePipelinePrimaryConfig * moviePipelineMasterConfigVideo = nullptr;
+	UMoviePipelinePrimaryConfig * moviePipelineMasterConfig = nullptr;
+#endif
+	
 	int renderindex=0;
 	int facenum = 0;
 	FString campos=L"center";

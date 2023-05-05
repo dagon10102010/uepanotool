@@ -28,8 +28,7 @@ void SPanoToolWidget::Construct(const FArguments& InArgs){
     
     captureConfig.ued = FPaths::ConvertRelativePathToFull(FPaths::EngineDir() + L"Binaries/Win64/UnrealEditor.exe").Replace(L"/",L"\\");
 	captureConfig.project = FPaths::ConvertRelativePathToFull(FPaths::GetProjectFilePath());
-    outputWidth = captureConfig.data.outwidth; 
-    step = captureConfig.step;
+
     int CaptureStyleSelectedIndex = 0;
     for (size_t i = 0; i < captureStyleData.data.Num(); i++)
     {
@@ -75,7 +74,7 @@ void SPanoToolWidget::Construct(const FArguments& InArgs){
                 SNew(SSpinBox<int>)
                 .MinValue(1024)
                 .MaxValue(16384)
-                .Value(outputWidth)
+                .Value(captureConfig.data.outwidth)
                 .OnValueChanged(this,&SPanoToolWidget::OnChangeWidth)
             ]
             
@@ -134,11 +133,82 @@ void SPanoToolWidget::Construct(const FArguments& InArgs){
                 SNew(SSpinBox<int>)
                 .MinValue(2)
                 .MaxValue(10)
-                .Value(step)
+                .Value(captureConfig.step)
                 .OnValueChanged(this,&SPanoToolWidget::OnChangeStep)
             ]
             
         ]
+        +SVerticalBox::Slot()
+        .AutoHeight()
+        [
+            SNew(SHorizontalBox)
+            +SHorizontalBox::Slot()
+            .FillWidth(2)
+            [
+                SNew(STextBlock)
+                .Text( LOCTEXT("PanoTool", "Remove images when finish"))
+            ]
+            +SHorizontalBox::Slot()
+            .FillWidth(1)
+            [
+                SNew(SCheckBox)
+                .IsChecked(captureConfig.clearImg)
+                .OnCheckStateChanged(this,&SPanoToolWidget::OnChangeDeleteImg)
+            ]
+            +SHorizontalBox::Slot()
+            .FillWidth(2)
+            [
+                SNew(STextBlock)
+                .Text( LOCTEXT("PanoTool", "Save jpg"))
+            ]
+            +SHorizontalBox::Slot()
+            .FillWidth(1)
+            [
+                SNew(SCheckBox)
+                .IsChecked(captureConfig.jpg)
+                .OnCheckStateChanged(this,&SPanoToolWidget::OnChangeJpg)
+            ]
+            
+        ]
+        // +SVerticalBox::Slot()
+        // .AutoHeight()
+        // [
+        //     SNew(SHorizontalBox)
+        //     +SHorizontalBox::Slot()
+        //     .FillWidth(2)
+        //     [
+        //         SNew(STextBlock)
+        //         .Text( LOCTEXT("PanoTool", "Output format"))
+        //     ]
+            
+        //     +SHorizontalBox::Slot()
+        //     .FillWidth(1)
+        //     [
+        //         SNew(SCheckBox)
+        //         .IsChecked(captureConfig.clearImg)
+        //         .OnCheckStateChanged(this,&SPanoToolWidget::OnChangeJpg)
+        //     ]
+        //     +SHorizontalBox::Slot()
+        //     .FillWidth(1)
+        //     [
+        //         SNew(STextBlock)
+        //         .Text( LOCTEXT("PanoTool", "jpg"))
+        //     ]
+        //     +SHorizontalBox::Slot()
+        //     .FillWidth(1)
+        //     [
+        //         SNew(SCheckBox)
+        //         .IsChecked(captureConfig.tiff)
+        //         .OnCheckStateChanged(this,&SPanoToolWidget::OnChangeTif)
+        //     ]
+        //     +SHorizontalBox::Slot()
+        //     .FillWidth(2)
+        //     [
+        //         SNew(STextBlock)
+        //         .Text( LOCTEXT("PanoTool", "tif"))
+        //     ]
+            
+        // ]
         +SVerticalBox::Slot()
         .AutoHeight()
         [
@@ -176,10 +246,19 @@ void SPanoToolWidget::Construct(const FArguments& InArgs){
     ];
 }
 void SPanoToolWidget::OnChangeWidth(int width){
-    outputWidth = width;
+    captureConfig.data.outwidth = width;
 }
 void SPanoToolWidget::OnChangeStep(int s){
-    step = s;
+    captureConfig.step = s;
+}
+void SPanoToolWidget::OnChangeDeleteImg(ECheckBoxState state){
+    captureConfig.clearImg = state==ECheckBoxState::Checked;
+}
+void SPanoToolWidget::OnChangeTif( ECheckBoxState state){
+    captureConfig.tiff = state==ECheckBoxState::Checked;
+}
+void SPanoToolWidget::OnChangeJpg( ECheckBoxState state){
+    captureConfig.jpg = state==ECheckBoxState::Checked;
 }
 
 void SPanoToolWidget::OnChangeCaptureStyle( TSharedPtr<FString> NewSelection, ESelectInfo::Type SelectInfo ){
@@ -195,15 +274,14 @@ void SPanoToolWidget::OnChangeOutput( TSharedPtr<FString> NewSelection, ESelectI
     captureConfig.projector = Index;
 }
 void SPanoToolWidget::CalcSize(){
-    captureConfig.data.outwidth = outputWidth;
-    captureConfig.data.outheight = outputWidth/2;
-    captureConfig.step = step;
+    
+    captureConfig.data.outheight = captureConfig.data.outwidth/2;
     float outrad = 3.1416f;
     if(captureConfig.projector==3 || captureConfig.projector==4){
-        captureConfig.data.outheight = outputWidth;
+        captureConfig.data.outheight = captureConfig.data.outwidth;
         outrad *= 0.5;
     }
-    int w = outputWidth*FMath::Tan(FMath::DegreesToRadians(captureConfig.data.fov)*0.5f)/outrad;
+    int w = captureConfig.data.outwidth*FMath::Tan(FMath::DegreesToRadians(captureConfig.data.fov)*0.5f)/outrad;
     captureConfig.data.width = w-w%captureConfig.data.basewidth+captureConfig.data.basewidth;
     captureConfig.data.height = captureConfig.data.baseheight*captureConfig.data.width/captureConfig.data.basewidth;
     UWorld* World = GEditor->GetEditorWorldContext().World();
@@ -237,7 +315,7 @@ FReply SPanoToolWidget::TestClick(){
 	return FReply::Handled();
 }
 FString SPanoToolWidget::RenderCmd(int index){
-    return FString().Printf(L"%s %s %s %s -renderpano -renderindex %d\n",*captureConfig.ued,*captureConfig.project,*captureConfig.map,*renderArg,index);
+    return FString().Printf(L"\"%s\" \"%s\" %s %s -renderpano -renderindex %d\n",*captureConfig.ued,*captureConfig.project,*captureConfig.map,*renderArg,index);
 }
 void SPanoToolWidget::SaveVideoScriptFile(){
     FString cmd = L"mkdir Saved\\MovieRenders_output\n";
@@ -245,9 +323,12 @@ void SPanoToolWidget::SaveVideoScriptFile(){
     FString script = FString().Printf(L"width %d\nheight %d\nprojector %d\n",captureConfig.data.outwidth,captureConfig.data.outheight,captureConfig.projector);
     for (int i = 0; i < captureConfig.data.total; i++){
         FVector r = captureConfig.data.GetRotate(i);
+        if(!captureConfig.IsFrontFace(i)){
+            continue;
+        }
         script += FString().Printf(L"plane s%d %f %f 0 %f %d %d\n",i,r.Z,r.Y,captureConfig.data.fov,captureConfig.data.width,captureConfig.data.height);
     }
-    UMovieSceneSequence* captureSeq = Cast<ULevelSequence>(UEditorAssetLibrary::LoadAsset(L"/UEPanoTool/Animation/renderseq"));
+    UMovieSceneSequence* captureSeq = Cast<ULevelSequence>(UEditorAssetLibrary::LoadAsset(L"/UEPanoTool/Animation/renderseqvideo"));
     UMovieScene* ms = captureSeq->GetMovieScene();
     FFrameRate DisplayRate = ms->GetDisplayRate();
     captureConfig.startframe = ConvertFrameTime(UE::MovieScene::DiscreteInclusiveLower(ms->GetPlaybackRange()), ms->GetTickResolution(), DisplayRate).FloorToFrame().Value;
@@ -255,19 +336,27 @@ void SPanoToolWidget::SaveVideoScriptFile(){
     
     script += FString().Printf(L"loop %d %d\n",captureConfig.startframe,captureConfig.endframe);
     for (int i = 0; i < captureConfig.data.total; i++){
+        if(!captureConfig.IsFrontFace(i)){
+            continue;
+        }
         cmd += RenderCmd(i);
         script += FString().Printf(L"input s%d Saved/MovieRenders/%s.%d.%%04d.png\n",i,*captureConfig.data.GetEyeName(i),i);
     }
     script += FString().Printf(L"output Saved/MovieRenders_output/%s.%%04d.tif\n",*captureConfig.data.GetEyeName(0));
-    script += FString().Printf(L"output Saved/MovieRenders_output/%s.%%04d.jpg\n",*captureConfig.data.GetEyeName(0));
+    if(captureConfig.jpg)
+        script += FString().Printf(L"output Saved/MovieRenders_output/%s.%%04d.jpg\n",*captureConfig.data.GetEyeName(0));
     script += FString().Printf(L"clear\n");
     if(captureConfig.data.stereo){
         for (int i = 0; i < captureConfig.data.total; i++){
+            if(!captureConfig.IsFrontFace(i)){
+                continue;
+            }
             cmd += RenderCmd(i+captureConfig.data.total);
             script += FString().Printf(L"input s%d Saved/MovieRenders/%s.%d.%%04d.png\n",i,*captureConfig.data.GetEyeName(i+captureConfig.data.total),i);
         }
         script += FString().Printf(L"output Saved/MovieRenders_output/right.%%04d.tif\n");
-        script += FString().Printf(L"output Saved/MovieRenders_output/right.%%04d.jpg\n");
+        if(captureConfig.jpg)
+            script += FString().Printf(L"output Saved/MovieRenders_output/right.%%04d.jpg\n");
         script += FString().Printf(L"clear\n");
     }
     script += FString().Printf(L"endloop\n");
@@ -278,17 +367,20 @@ void SPanoToolWidget::SaveVideoScriptFile(){
 
     cmd += FString().Printf(L".\\Plugins\\UEPanoTool\\Tool\\uestitch -script .\\Plugins\\UEPanoTool\\Tool\\script.txt\n");
     if(captureConfig.data.stereo){
-        script = FString().Printf(L"width %d\nheight %d\n\n",captureConfig.data.outwidth,captureConfig.data.outwidth);
+        script = FString().Printf(L"width %d\nheight %d\n\n",captureConfig.data.outwidth,captureConfig.data.outheight*2);
         script += FString().Printf(L"loop %d %d\n",captureConfig.startframe,captureConfig.endframe);
         script += FString().Printf(L"background Saved/MovieRenders_output/left.%%04d.tif\n");
         script += FString().Printf(L"background Saved/MovieRenders_output/right.%%04d.tif %d\n",captureConfig.data.outheight);
-        script += FString().Printf(L"output Saved/MovieRenders_output/%%04d.jpg\n");
+        if(captureConfig.jpg)
+            script += FString().Printf(L"output Saved/MovieRenders_output/%%04d.jpg\n");
         script += L"clear\n";
         script += L"endloop\n";
         fPath = FPaths::Combine(FPaths::ProjectPluginsDir(),L"UEPanoTool/Tool/scriptjoin.txt");
         FFileHelper::SaveStringToFile(script, *fPath);
         cmd += FString().Printf(L".\\Plugins\\UEPanoTool\\Tool\\uestitch -script .\\Plugins\\UEPanoTool\\Tool\\scriptjoin.txt\n");
     }
+    if(captureConfig.clearImg)
+        cmd += L"rmdir Saved\\MovieRenders /S /Q\n";
     cmd += L"explorer Saved\\MovieRenders_output\n";
     fPath = FPaths::Combine(FPaths::ProjectDir(),L"render.cmd");
     FFileHelper::SaveStringToFile(cmd, *fPath);
@@ -302,6 +394,9 @@ void SPanoToolWidget::SaveScriptFile(FPanoPointList* list){
 
     FString script = FString().Printf(L"width %d\nheight %d\nprojector %d\n",captureConfig.data.outwidth,captureConfig.data.outheight,captureConfig.projector);
     for (int i = 0; i < captureConfig.data.total; i++){
+        if(!captureConfig.IsFrontFace(i)){
+            continue;
+        }
         FVector r = captureConfig.data.GetRotate(i);
         script += FString().Printf(L"plane s%d %f %f 0 %f %d %d\n",i,r.Z,r.Y,captureConfig.data.fov,captureConfig.data.width,captureConfig.data.height);
     }
@@ -309,20 +404,27 @@ void SPanoToolWidget::SaveScriptFile(FPanoPointList* list){
     for (FPanoPoint p : list->data){
         for (int i = 0; i < captureConfig.data.total; i++)
         {
-            script += FString().Printf(L"input s%d Saved/MovieRenders/center.0.%04d.png\n",i,count*captureConfig.step+captureConfig.step-1);
+            if(captureConfig.IsFrontFace(i)){
+                script += FString().Printf(L"input s%d Saved/MovieRenders/center.0.%04d.png\n",i,count*captureConfig.step+captureConfig.step-1);    
+            }
+            
             count ++;
         }
         if(captureConfig.data.stereo){
             script += FString().Printf(L"output Saved/MovieRenders_output/%s.left.tif\n",*p.name);
         }else{
             script += FString().Printf(L"output Saved/MovieRenders_output/%s.tif\n",*p.name);
-            script += FString().Printf(L"output Saved/MovieRenders_output/%s.jpg\n",*p.name);
+            if(captureConfig.jpg)
+                script += FString().Printf(L"output Saved/MovieRenders_output/%s.jpg\n",*p.name);
         }
         script += L"clear\n";
         if(captureConfig.data.stereo){
             for (int i = 0; i < captureConfig.data.total; i++)
             {
-                script += FString().Printf(L"input s%d Saved/MovieRenders/center.0.%04d.png\n",i,count*captureConfig.step+captureConfig.step-1);
+                if(captureConfig.IsFrontFace(i)){
+                    script += FString().Printf(L"input s%d Saved/MovieRenders/center.0.%04d.png\n",i,count*captureConfig.step+captureConfig.step-1);
+                }
+                
                 count ++;
             }
             script += FString().Printf(L"output Saved/MovieRenders_output/%s.right.tif\n",*p.name);
@@ -333,7 +435,7 @@ void SPanoToolWidget::SaveScriptFile(FPanoPointList* list){
     FFileHelper::SaveStringToFile(script, *fPath);
 
     if(captureConfig.data.stereo){
-        script = FString().Printf(L"width %d\nheight %d\n\n",captureConfig.data.outwidth,captureConfig.data.outwidth);
+        script = FString().Printf(L"width %d\nheight %d\n\n",captureConfig.data.outwidth,captureConfig.data.outheight*2);
         script += L"loop 0 1\n";
         for (FPanoPoint p : list->data){
             script += FString().Printf(L"background Saved/MovieRenders_output/%s.left.tif\n",*p.name);
@@ -347,8 +449,8 @@ void SPanoToolWidget::SaveScriptFile(FPanoPointList* list){
         FFileHelper::SaveStringToFile(script, *fPath);
         cmd += FString().Printf(L".\\Plugins\\UEPanoTool\\Tool\\uestitch -script .\\Plugins\\UEPanoTool\\Tool\\scriptjoin.txt\n");
     }
-    
-
+    if(captureConfig.clearImg)
+        cmd += L"rmdir Saved\\MovieRenders /S /Q\n";
     cmd += L"explorer Saved\\MovieRenders_output\n";
     fPath = FPaths::Combine(FPaths::ProjectDir(),L"render.cmd");
     FFileHelper::SaveStringToFile(cmd, *fPath);
@@ -408,6 +510,7 @@ void SPanoToolWidget::ResetSequence(){
     camSection->SetCameraBindingID(UE::MovieScene::FRelativeObjectBindingID(bindId));
     camSection->SetRange(captureRange);
     UEditorAssetLibrary::SaveAsset(L"/UEPanoTool/Animation/renderseqvideo");
+    GEditor->GetEditorSubsystem<UAssetEditorSubsystem>()->OpenEditorForAsset(L"/UEPanoTool/Animation/renderseqvideo");
     
 }
 

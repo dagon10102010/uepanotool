@@ -1,32 +1,32 @@
-width 11460
-height 7640
-projector 2
-plane s0 0.000000 90.000000 0 90.000000 3820 3820
-plane s1 0.000000 45.000000 0 90.000000 3820 3820
-plane s2 45.000000 45.000000 0 90.000000 3820 3820
-plane s3 90.000000 45.000000 0 90.000000 3820 3820
-plane s4 135.000000 45.000000 0 90.000000 3820 3820
-plane s5 180.000000 45.000000 0 90.000000 3820 3820
-plane s6 225.000000 45.000000 0 90.000000 3820 3820
-plane s7 270.000000 45.000000 0 90.000000 3820 3820
-plane s8 315.000000 45.000000 0 90.000000 3820 3820
-plane s9 0.000000 0.000000 0 90.000000 3820 3820
-plane s10 45.000000 0.000000 0 90.000000 3820 3820
-plane s11 90.000000 0.000000 0 90.000000 3820 3820
-plane s12 135.000000 0.000000 0 90.000000 3820 3820
-plane s13 180.000000 0.000000 0 90.000000 3820 3820
-plane s14 225.000000 0.000000 0 90.000000 3820 3820
-plane s15 270.000000 0.000000 0 90.000000 3820 3820
-plane s16 315.000000 0.000000 0 90.000000 3820 3820
-plane s17 0.000000 -45.000000 0 90.000000 3820 3820
-plane s18 45.000000 -45.000000 0 90.000000 3820 3820
-plane s19 90.000000 -45.000000 0 90.000000 3820 3820
-plane s20 135.000000 -45.000000 0 90.000000 3820 3820
-plane s21 180.000000 -45.000000 0 90.000000 3820 3820
-plane s22 225.000000 -45.000000 0 90.000000 3820 3820
-plane s23 270.000000 -45.000000 0 90.000000 3820 3820
-plane s24 315.000000 -45.000000 0 90.000000 3820 3820
-plane s25 0.000000 -90.000000 0 90.000000 3820 3820
+width 4096
+height 2048
+projector 0
+plane s0 0.000000 90.000000 0 90.000000 1320 1320
+plane s1 0.000000 45.000000 0 90.000000 1320 1320
+plane s2 45.000000 45.000000 0 90.000000 1320 1320
+plane s3 90.000000 45.000000 0 90.000000 1320 1320
+plane s4 135.000000 45.000000 0 90.000000 1320 1320
+plane s5 180.000000 45.000000 0 90.000000 1320 1320
+plane s6 225.000000 45.000000 0 90.000000 1320 1320
+plane s7 270.000000 45.000000 0 90.000000 1320 1320
+plane s8 315.000000 45.000000 0 90.000000 1320 1320
+plane s9 0.000000 0.000000 0 90.000000 1320 1320
+plane s10 45.000000 0.000000 0 90.000000 1320 1320
+plane s11 90.000000 0.000000 0 90.000000 1320 1320
+plane s12 135.000000 0.000000 0 90.000000 1320 1320
+plane s13 180.000000 0.000000 0 90.000000 1320 1320
+plane s14 225.000000 0.000000 0 90.000000 1320 1320
+plane s15 270.000000 0.000000 0 90.000000 1320 1320
+plane s16 315.000000 0.000000 0 90.000000 1320 1320
+plane s17 0.000000 -45.000000 0 90.000000 1320 1320
+plane s18 45.000000 -45.000000 0 90.000000 1320 1320
+plane s19 90.000000 -45.000000 0 90.000000 1320 1320
+plane s20 135.000000 -45.000000 0 90.000000 1320 1320
+plane s21 180.000000 -45.000000 0 90.000000 1320 1320
+plane s22 225.000000 -45.000000 0 90.000000 1320 1320
+plane s23 270.000000 -45.000000 0 90.000000 1320 1320
+plane s24 315.000000 -45.000000 0 90.000000 1320 1320
+plane s25 0.000000 -90.000000 0 90.000000 1320 1320
 input s0 Saved/MovieRenders/center.0.0001.png
 input s1 Saved/MovieRenders/center.0.0003.png
 input s2 Saved/MovieRenders/center.0.0005.png
@@ -53,6 +53,33 @@ input s22 Saved/MovieRenders/center.0.0045.png
 input s23 Saved/MovieRenders/center.0.0047.png
 input s24 Saved/MovieRenders/center.0.0049.png
 input s25 Saved/MovieRenders/center.0.0051.png
-output Saved/MovieRenders_output/PanoHotspot1.tif
-output Saved/MovieRenders_output/PanoHotspot1.jpg
+output Saved/MovieRenders_output/BedRoom.tif
+clear
+input s0 Saved/MovieRenders/center.0.0053.png
+input s1 Saved/MovieRenders/center.0.0055.png
+input s2 Saved/MovieRenders/center.0.0057.png
+input s3 Saved/MovieRenders/center.0.0059.png
+input s4 Saved/MovieRenders/center.0.0061.png
+input s5 Saved/MovieRenders/center.0.0063.png
+input s6 Saved/MovieRenders/center.0.0065.png
+input s7 Saved/MovieRenders/center.0.0067.png
+input s8 Saved/MovieRenders/center.0.0069.png
+input s9 Saved/MovieRenders/center.0.0071.png
+input s10 Saved/MovieRenders/center.0.0073.png
+input s11 Saved/MovieRenders/center.0.0075.png
+input s12 Saved/MovieRenders/center.0.0077.png
+input s13 Saved/MovieRenders/center.0.0079.png
+input s14 Saved/MovieRenders/center.0.0081.png
+input s15 Saved/MovieRenders/center.0.0083.png
+input s16 Saved/MovieRenders/center.0.0085.png
+input s17 Saved/MovieRenders/center.0.0087.png
+input s18 Saved/MovieRenders/center.0.0089.png
+input s19 Saved/MovieRenders/center.0.0091.png
+input s20 Saved/MovieRenders/center.0.0093.png
+input s21 Saved/MovieRenders/center.0.0095.png
+input s22 Saved/MovieRenders/center.0.0097.png
+input s23 Saved/MovieRenders/center.0.0099.png
+input s24 Saved/MovieRenders/center.0.0101.png
+input s25 Saved/MovieRenders/center.0.0103.png
+output Saved/MovieRenders_output/LivingRoom.tif
 clear

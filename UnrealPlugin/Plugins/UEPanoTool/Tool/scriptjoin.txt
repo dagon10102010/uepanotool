@@ -1,17 +1,9 @@
-width 6000
-height 6000
+width 2048
+height 4096
 
 loop 0 1
 background Saved/MovieRenders_output/PanoHotspot1.left.tif
-background Saved/MovieRenders_output/PanoHotspot1.right.tif 3000
+background Saved/MovieRenders_output/PanoHotspot1.right.tif 2048
 output Saved/MovieRenders_output/PanoHotspot1.jpg
-clear
-background Saved/MovieRenders_output/PanoHotspot2.left.tif
-background Saved/MovieRenders_output/PanoHotspot2.right.tif 3000
-output Saved/MovieRenders_output/PanoHotspot2.jpg
-clear
-background Saved/MovieRenders_output/PanoHotspot3.left.tif
-background Saved/MovieRenders_output/PanoHotspot3.right.tif 3000
-output Saved/MovieRenders_output/PanoHotspot3.jpg
 clear
 endloop
