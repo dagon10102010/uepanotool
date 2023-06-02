@@ -24,6 +24,17 @@ https://youtu.be/LHEtMplRv_0
 - Close project
 - Run `render.cmd` and wait for finish
 
+# Render video with exist sequence
+
+- add PanoCameraComponent to sequence camera
+- assign sequence to PanoCameraComponent->sequence 
+- assign movierenderqueue to PanoCameraComponent->mrq
+- all render setting will copy from `/UEPanoTool/Animation/renderconfigvideo`
+- in PanoCameraComponent click `Create MRQ`
+- in Movie Render Queue click `Render(Local)`
+- in output directory run `stitch.cmd`
+
+
 # Render PanoShot
 
 - add actor PanoCapture to your scene if not exist
