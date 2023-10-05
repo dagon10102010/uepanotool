@@ -41,7 +41,8 @@ public class UEPanoTool : ModuleRules
 				"Json",
 				"JsonUtilities",
 				"LevelSequence",
-				"MovieRenderPipelineCore"
+				"MovieRenderPipelineCore",
+				"MovieRenderPipelineRenderPasses"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

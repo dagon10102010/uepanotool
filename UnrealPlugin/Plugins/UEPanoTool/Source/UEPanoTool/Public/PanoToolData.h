@@ -75,6 +75,9 @@ struct UEPANOTOOL_API FPanoCaptureConfig {
 	UPROPERTY()
 	FString map;
 
+	UPROPERTY()
+	FString outputdir = "Saved";
+
     UPROPERTY()
 	bool video=true;
 
@@ -98,12 +101,15 @@ struct UEPANOTOOL_API FPanoCaptureConfig {
 
 	UPROPERTY()
 	bool jpg=false;
-
+	
 	UPROPERTY()
 	bool png=false;
 
 	UPROPERTY()
 	bool tiff=false;
+
+	UPROPERTY()
+	bool autoStitch=false;
 
     UPROPERTY()
     FPanoCaptureStyle data = FPanoCaptureStyle();
@@ -153,3 +159,21 @@ struct UEPANOTOOL_API FPanoPointList {
    
 };
 
+UENUM(BlueprintType)
+enum  ECaptureStyle{
+	mono6,
+	mono26,
+	mono36,
+	// stereo240,
+	// stereo2160,
+};
+
+
+UENUM(BlueprintType)
+enum  EOutputStyle{
+	EquirectAngular,
+	Google,
+	Cube,
+	VR180,
+	Fisheye180,
+};

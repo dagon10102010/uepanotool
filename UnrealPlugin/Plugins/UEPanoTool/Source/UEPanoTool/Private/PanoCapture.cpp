@@ -5,7 +5,8 @@
 #include "UObject/ConstructorHelpers.h"
 #include "MoviePipelineOutputSetting.h"
 #include "Kismet/GameplayStatics.h"
-
+#include "MoviePipelineRenderPass.h"
+#include "MoviePipelineDeferredPasses.h"
 // Fill out your copyright notice in the Description page of Project Settings.
 // Sets default values
 APanoCapture::APanoCapture()
@@ -99,6 +100,8 @@ void APanoCapture::RunRender(){
 		UMoviePipelineOutputSetting* outputsetting = Cast<UMoviePipelineOutputSetting>(moviePipelineMasterConfigVideo->FindOrAddSettingByClass(UMoviePipelineOutputSetting::StaticClass()));
 		outputsetting->FileNameFormat = FString().Printf(L"%s.%d.{frame_number}",*campos,facenum%captureConfig->data.total);
 		outputsetting->OutputResolution = FIntPoint(captureConfig->data.width,captureConfig->data.height);
+		outputsetting->OutputDirectory.Path = FPaths::Combine(captureConfig->outputdir,L"MovieRenders");
+		
 		job->SetConfiguration(moviePipelineMasterConfigVideo);
 		moviePipelineSubsystem->RenderJob(job);
 	}else{
@@ -106,10 +109,41 @@ void APanoCapture::RunRender(){
 		UMoviePipelineOutputSetting* outputsetting = Cast<UMoviePipelineOutputSetting>(moviePipelineMasterConfig->FindOrAddSettingByClass(UMoviePipelineOutputSetting::StaticClass()));
 		outputsetting->FileNameFormat = FString().Printf(L"%s.%d.{frame_number}",*campos,facenum%captureConfig->data.total);
 		outputsetting->OutputResolution = FIntPoint(captureConfig->data.width,captureConfig->data.height);
+		outputsetting->OutputDirectory.Path = FPaths::Combine(captureConfig->outputdir,L"MovieRenders");
+
 		job->SetConfiguration(moviePipelineMasterConfig);
 		moviePipelineSubsystem->RenderJob(job);
 	}
 	
+	
+}
+TArray<FString> APanoCapture::GetLayerObj(){
+	TArray<FString> ls = TArray<FString>();
+	// UMoviePipelineOutputSetting* outputsetting = Cast<UMoviePipelineOutputSetting>(moviePipelineMasterConfigVideo->FindOrAddSettingByClass(UMoviePipelineOutputSetting::StaticClass()));
+	UMoviePipelineDeferredPassBase * renderPassSetting = Cast<UMoviePipelineDeferredPassBase >(moviePipelineMasterConfigVideo->FindOrAddSettingByClass(UMoviePipelineDeferredPassBase ::StaticClass()));
+	
+	for(FActorLayer l:renderPassSetting->ActorLayers){
+		ls.Add(L".FinalImage" + l.Name.ToString());
+	}
+	if(!renderPassSetting->ActorLayers.Num())
+		ls.Add(L"");
+	
+	if(renderPassSetting->bAddDefaultLayer){
+		ls.Add(L".FinalImageDefaultLayer");
+	}
+	if(renderPassSetting->bRenderMainPass){
+		ls.Add(L".FinalImage");
+	}
+	return ls;
+}
+void APanoCapture::Test(){
+	UMoviePipelineOutputSetting* outputsetting = Cast<UMoviePipelineOutputSetting>(moviePipelineMasterConfigVideo->FindOrAddSettingByClass(UMoviePipelineOutputSetting::StaticClass()));
+	UE_LOG(LogTemp, Log,TEXT("%s"),*outputsetting->OutputDirectory.Path);
+	UMoviePipelineDeferredPassBase * renderPassSetting = Cast<UMoviePipelineDeferredPassBase >(moviePipelineMasterConfigVideo->FindOrAddSettingByClass(UMoviePipelineDeferredPassBase ::StaticClass()));
+	UE_LOG(LogTemp, Log,TEXT("%s"),*renderPassSetting->GetName());
+	for(FActorLayer l:renderPassSetting->ActorLayers){
+		UE_LOG(LogTemp, Log,TEXT("%s"),*l.Name.ToString());
+	}
 	
 }
 void APanoCapture::OnRenderFinish(FMoviePipelineOutputData Results){

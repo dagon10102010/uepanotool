@@ -26,17 +26,27 @@ public:
 	APanoCapture();
 	// Called every frame
 	
+
+	// UPROPERTY(EditAnywhere)
+	// ULevelSequence* customSequences;
+	
+	TArray<FString> GetLayerObj();
 protected:
     virtual void BeginPlay() override;
 	// virtual void Tick( float DeltaSeconds ) override;
 	void SetupCamera(int face);
-	UFUNCTION(CallInEditor)
 	void RunRender();
+	UFUNCTION(CallInEditor, Category = "PanoCapture", meta = (AllowPrivateAccess = "true"))
+	void Test();
 	UFUNCTION()
 	void OnRenderFinish(FMoviePipelineOutputData Results);
 
+
+	UPROPERTY(EditAnywhere, Category = "PanoCapture", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<ULevelSequence> captureSequence;
+
 private:
-	// UPROPERTY()
+	
     // class USceneComponent* SceneComponent;
 	// UPROPERTY(VisibleDefaultsOnly)
 	class UCameraComponent* CameraComponent;

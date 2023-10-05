@@ -49,7 +49,10 @@ public class UEPanoToolEditor : ModuleRules
 				"LevelSequence",
 				"MovieScene",
 				"MovieSceneTracks",
-				"EditorScriptingUtilities"
+				"EditorScriptingUtilities",
+				"MovieRenderPipelineCore",
+				"MovieRenderPipelineRenderPasses",
+				"MovieRenderPipelineSettings"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);
