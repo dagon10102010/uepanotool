@@ -465,16 +465,16 @@ void SPanoToolWidget::SaveVideoScriptFile(){
 FString SPanoToolWidget::BuildOutputString(int eye,FString layer){
     FString script = FString();
     if(captureConfig.tiff){
-        script += FString().Printf(L"output MovieRenders_output/%s%s.%%04d.tif\n",*captureConfig.data.GetEyeName(0),*layer);
+        script += FString().Printf(L"output MovieRenders_output/%s.%s.%%04d.tif\n",*captureConfig.data.GetEyeName(0),*layer);
     }
     if(captureConfig.png){
-        script += FString().Printf(L"output MovieRenders_output/%s%s.%%04d.png\n",*captureConfig.data.GetEyeName(0),*layer);
+        script += FString().Printf(L"output MovieRenders_output/%s.%s.%%04d.png\n",*captureConfig.data.GetEyeName(0),*layer);
     }
     if(captureConfig.jpg){
-        script += FString().Printf(L"output MovieRenders_output/%s%s.%%04d.jpg\n",*captureConfig.data.GetEyeName(0),*layer);
+        script += FString().Printf(L"output MovieRenders_output/%s.%s.%%04d.jpg\n",*captureConfig.data.GetEyeName(0),*layer);
     }
     if(!captureConfig.tiff && !captureConfig.png && !captureConfig.jpg){
-        script += FString().Printf(L"output MovieRenders_output/%s%s.%%04d.jpg\n",*captureConfig.data.GetEyeName(0),*layer);
+        script += FString().Printf(L"output MovieRenders_output/%s.%s.%%04d.jpg\n",*captureConfig.data.GetEyeName(0),*layer);
     }
     return script;
 }
@@ -513,7 +513,7 @@ void SPanoToolWidget::SaveScriptFile(FPanoPointList* list){
             // script += FString().Printf(L"output MovieRenders_output/%s.tif\n",*p.name);
             // if(captureConfig.jpg)
             //     script += FString().Printf(L"output MovieRenders_output/%s.jpg\n",*p.name);
-            script += BuildOutputString(0,L"");
+            script += BuildOutputString(0,*p.name);
         }
         script += L"clear\n";
         if(captureConfig.data.stereo){
@@ -540,7 +540,7 @@ void SPanoToolWidget::SaveScriptFile(FPanoPointList* list){
             script += FString().Printf(L"background MovieRenders_output/%s.left.tif\n",*p.name);
             script += FString().Printf(L"background MovieRenders_output/%s.right.tif %d\n",*p.name,captureConfig.data.outheight);
             // script += FString().Printf(L"output MovieRenders_output/%s.jpg\n",*p.name);
-            script += BuildOutputString(0,L"");
+            script += BuildOutputString(0,*p.name);
             script += L"clear\n";
         }
         script += L"endloop\n";
