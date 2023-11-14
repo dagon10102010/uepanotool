@@ -18,8 +18,8 @@ public:
 	// Called every frame
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool CaptureRotation = false;
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	// 	FString panoguid = TEXT("");
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bSkip = false;
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	// 	FString panoname = TEXT("");
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite)

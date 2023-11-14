@@ -162,7 +162,7 @@ void SPanoToolWidget::Construct(const FArguments& InArgs){
         [
             SNew(SHorizontalBox)
             +SHorizontalBox::Slot()
-            .FillWidth(3)
+            .FillWidth(2)
             [
                 SNew(STextBlock)
                 .Text( LOCTEXT("PanoTool", "Remove images when finish"))
@@ -187,7 +187,11 @@ void SPanoToolWidget::Construct(const FArguments& InArgs){
                 .IsChecked(!captureConfig.autoStitch)
                 .OnCheckStateChanged(this,&SPanoToolWidget::OnChangeStitch)
             ]
-            
+            +SHorizontalBox::Slot()
+            .FillWidth(2)
+            +SHorizontalBox::Slot()
+            .FillWidth(1)
+           
         ]
         +SVerticalBox::Slot()
         .AutoHeight()
@@ -232,6 +236,33 @@ void SPanoToolWidget::Construct(const FArguments& InArgs){
                 .IsChecked(captureConfig.png)
                 .OnCheckStateChanged(this,&SPanoToolWidget::OnChangePng)
             ]
+            
+        ]
+        +SVerticalBox::Slot()
+        .AutoHeight()
+        [
+            SNew(SHorizontalBox)
+            +SHorizontalBox::Slot()
+            .FillWidth(2)
+            [
+                SNew(STextBlock)
+                .Text( LOCTEXT("PanoTool", "User Path Tracer"))
+            ]
+            +SHorizontalBox::Slot()
+            .FillWidth(1)
+            [
+                SNew(SCheckBox)
+                .IsChecked(captureConfig.pathtracer)
+                .OnCheckStateChanged(this,&SPanoToolWidget::OnChangePathtracer)
+            ]
+             +SHorizontalBox::Slot()
+            .FillWidth(2)
+            +SHorizontalBox::Slot()
+            .FillWidth(1)
+             +SHorizontalBox::Slot()
+            .FillWidth(2)
+            +SHorizontalBox::Slot()
+            .FillWidth(1)
             
         ]
         +SVerticalBox::Slot()
@@ -304,7 +335,11 @@ void SPanoToolWidget::OnChangePng( ECheckBoxState state){
 void SPanoToolWidget::OnChangeStitch( ECheckBoxState state){
     captureConfig.autoStitch = state!=ECheckBoxState::Checked;
 }
-
+void SPanoToolWidget::OnChangePathtracer( ECheckBoxState state){
+    captureConfig.pathtracer = state==ECheckBoxState::Checked;
+    if(captureConfig.pathtracer)
+    UEditorDialogLibrary::ShowMessage(FText().FromString(L"MSG"),FText().FromString(L"Render with Pathtracer only require\n step=2 \n CaptureStyle=mono6"),EAppMsgType::Ok);
+}
 void SPanoToolWidget::OnChangeDir( const FText & text, ETextCommit::Type type){
     captureConfig.outputdir = text.ToString();
 }

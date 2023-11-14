@@ -84,7 +84,8 @@ void FPanoPointList::Scan(UWorld*World){
     data.Empty();
     for (AActor* a : FoundActors){
         APanoHotspot* hp = Cast<APanoHotspot>(a);
-        data.Add(FPanoPoint(hp));
+        if(!hp->bSkip)
+            data.Add(FPanoPoint(hp));
     }
 
 }

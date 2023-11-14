@@ -109,6 +109,9 @@ struct UEPANOTOOL_API FPanoCaptureConfig {
 	bool tiff=false;
 
 	UPROPERTY()
+	bool pathtracer=false;
+
+	UPROPERTY()
 	bool autoStitch=false;
 
     UPROPERTY()

@@ -59,9 +59,13 @@ private:
 #if ENGINE_MINOR_VERSION == 1
     UMoviePipelineMasterConfig * moviePipelineMasterConfigVideo = nullptr;
 	UMoviePipelineMasterConfig * moviePipelineMasterConfig = nullptr;
+	UMoviePipelineMasterConfig * moviePipelineMasterConfigVideoPathTracer = nullptr;
+	UMoviePipelineMasterConfig * moviePipelineMasterConfigPathTracer = nullptr;
 #else //2
 	UMoviePipelinePrimaryConfig * moviePipelineMasterConfigVideo = nullptr;
 	UMoviePipelinePrimaryConfig * moviePipelineMasterConfig = nullptr;
+	UMoviePipelinePrimaryConfig * moviePipelineMasterConfigVideoPathTracer = nullptr;
+	UMoviePipelinePrimaryConfig * moviePipelineMasterConfigPathTracer = nullptr;
 #endif
 	
 	int renderindex=0;

@@ -48,6 +48,8 @@ private:
 	void OnChangePng( ECheckBoxState state);
 	void OnChangeJpg( ECheckBoxState state);
 	void OnChangeStitch( ECheckBoxState state);
+	void OnChangePathtracer( ECheckBoxState state);
+	
 	void OnChangeDir( const FText & text, ETextCommit::Type type);
 	
 	

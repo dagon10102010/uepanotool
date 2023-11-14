@@ -50,11 +50,22 @@ APanoCapture::APanoCapture()
 	moviePipelineMasterConfig = renderconfig.Object;
 	static ConstructorHelpers::FObjectFinder<UMoviePipelineMasterConfig> renderconfigvideo(TEXT("/UEPanoTool/Animation/renderconfigvideo"));
 	moviePipelineMasterConfigVideo = renderconfigvideo.Object;
+
+	static ConstructorHelpers::FObjectFinder<UMoviePipelineMasterConfig> renderconfigPathTracer(TEXT("/UEPanoTool/Animation/renderconfigPathTracer"));
+	moviePipelineMasterConfigPathTracer = renderconfigPathTracer.Object;
+	static ConstructorHelpers::FObjectFinder<UMoviePipelineMasterConfig> renderconfigvideoPathTracer(TEXT("/UEPanoTool/Animation/renderconfigvideoPathTracer"));
+	moviePipelineMasterConfigVideoPathTracer = renderconfigvideoPathTracer.Object;
+
 #else //2
 	static ConstructorHelpers::FObjectFinder<UMoviePipelinePrimaryConfig> renderconfig(TEXT("/UEPanoTool/Animation/renderconfig"));
 	moviePipelineMasterConfig = renderconfig.Object;
 	static ConstructorHelpers::FObjectFinder<UMoviePipelinePrimaryConfig> renderconfigvideo(TEXT("/UEPanoTool/Animation/renderconfigvideo"));
 	moviePipelineMasterConfigVideo = renderconfigvideo.Object;
+
+	static ConstructorHelpers::FObjectFinder<UMoviePipelinePrimaryConfig> renderconfigPathTracer(TEXT("/UEPanoTool/Animation/renderconfigPathTracer"));
+	moviePipelineMasterConfigPathTracer = renderconfigPathTracer.Object;
+	static ConstructorHelpers::FObjectFinder<UMoviePipelinePrimaryConfig> renderconfigvideoPathTracer(TEXT("/UEPanoTool/Animation/renderconfigvideoPathTracer"));
+	moviePipelineMasterConfigVideoPathTracer = renderconfigvideoPathTracer.Object;
 #endif
 	
 }
@@ -94,24 +105,38 @@ void APanoCapture::RunRender(){
 	FScriptDelegate scriptDelegate = FScriptDelegate();
 	scriptDelegate.BindUFunction(this,L"OnRenderFinish");
 	moviePipelineSubsystem->OnRenderFinished.Add(scriptDelegate);
-	
 	if(captureConfig->video){
 		UMoviePipelineExecutorJob* job = moviePipelineSubsystem->AllocateJob(levelSequenceVideo);
-		UMoviePipelineOutputSetting* outputsetting = Cast<UMoviePipelineOutputSetting>(moviePipelineMasterConfigVideo->FindOrAddSettingByClass(UMoviePipelineOutputSetting::StaticClass()));
+		UMoviePipelineOutputSetting* outputsetting;
+
+		if(captureConfig->pathtracer)
+			outputsetting = Cast<UMoviePipelineOutputSetting>(moviePipelineMasterConfigVideoPathTracer->FindOrAddSettingByClass(UMoviePipelineOutputSetting::StaticClass()));
+		else
+			outputsetting = Cast<UMoviePipelineOutputSetting>(moviePipelineMasterConfigVideo->FindOrAddSettingByClass(UMoviePipelineOutputSetting::StaticClass()));
 		outputsetting->FileNameFormat = FString().Printf(L"%s.%d.{frame_number}",*campos,facenum%captureConfig->data.total);
 		outputsetting->OutputResolution = FIntPoint(captureConfig->data.width,captureConfig->data.height);
 		outputsetting->OutputDirectory.Path = FPaths::Combine(captureConfig->outputdir,L"MovieRenders");
+		if(captureConfig->pathtracer)
+			job->SetConfiguration(moviePipelineMasterConfigVideoPathTracer);
+		else 
+			job->SetConfiguration(moviePipelineMasterConfigVideo);
 		
-		job->SetConfiguration(moviePipelineMasterConfigVideo);
 		moviePipelineSubsystem->RenderJob(job);
 	}else{
 		UMoviePipelineExecutorJob* job = moviePipelineSubsystem->AllocateJob(levelSequence);
-		UMoviePipelineOutputSetting* outputsetting = Cast<UMoviePipelineOutputSetting>(moviePipelineMasterConfig->FindOrAddSettingByClass(UMoviePipelineOutputSetting::StaticClass()));
+		UMoviePipelineOutputSetting* outputsetting;
+		
+		if(captureConfig->pathtracer)
+			outputsetting = Cast<UMoviePipelineOutputSetting>(moviePipelineMasterConfigPathTracer->FindOrAddSettingByClass(UMoviePipelineOutputSetting::StaticClass()));
+		else
+			outputsetting = Cast<UMoviePipelineOutputSetting>(moviePipelineMasterConfig->FindOrAddSettingByClass(UMoviePipelineOutputSetting::StaticClass()));
 		outputsetting->FileNameFormat = FString().Printf(L"%s.%d.{frame_number}",*campos,facenum%captureConfig->data.total);
 		outputsetting->OutputResolution = FIntPoint(captureConfig->data.width,captureConfig->data.height);
 		outputsetting->OutputDirectory.Path = FPaths::Combine(captureConfig->outputdir,L"MovieRenders");
-
-		job->SetConfiguration(moviePipelineMasterConfig);
+		if(captureConfig->pathtracer)
+			job->SetConfiguration(moviePipelineMasterConfigPathTracer);
+		else 
+			job->SetConfiguration(moviePipelineMasterConfig);
 		moviePipelineSubsystem->RenderJob(job);
 	}
 	
