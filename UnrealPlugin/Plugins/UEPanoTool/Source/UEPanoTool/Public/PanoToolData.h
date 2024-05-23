@@ -167,8 +167,8 @@ enum  ECaptureStyle{
 	mono6,
 	mono26,
 	mono36,
-	// stereo240,
-	// stereo2160,
+	stereo240,
+	stereo2160,
 };
 
 

@@ -26,7 +26,7 @@ https://youtu.be/sMBXY6qIq_4
 - Close project
 - Run `render.cmd` and wait for finish
 
-# Render video with exist sequence
+# Render video with exist sequence [link](./Plugins/UEPanoTool/RenderVideo.md)
 
 - add PanoCameraComponent to sequence camera
 - assign sequence to PanoCameraComponent->sequence 

@@ -33,7 +33,8 @@ APanoCapture::APanoCapture()
 	CameraComponent->PostProcessSettings.bOverride_LensFlareIntensity = true;
 	CameraComponent->PostProcessSettings.bOverride_BloomIntensity = true;
 	CameraComponent->PostProcessSettings.bOverride_FilmGrainIntensity = true;
-	
+	CameraComponent->bOverrideAspectRatioAxisConstraint = true;
+	CameraComponent->AspectRatioAxisConstraint = EAspectRatioAxisConstraint::AspectRatio_MaintainXFOV;
 	
 
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.

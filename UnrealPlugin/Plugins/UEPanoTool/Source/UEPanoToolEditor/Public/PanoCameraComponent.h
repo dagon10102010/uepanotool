@@ -29,7 +29,7 @@ public:
     TObjectPtr<ULevelSequence> sequence;
     UPROPERTY(EditAnywhere)
     TObjectPtr<UMoviePipelineQueue> mrq;
-    UPROPERTY(EditAnywhere,meta = (ClampMin = "1024", ClampMax = "16384", UIMin = "1024", UIMax = "16384"))
+    UPROPERTY(EditAnywhere,meta = (ClampMin = "1024", ClampMax = "32768", UIMin = "1024", UIMax = "32768"))
     int outputWidth = 2048;
     UPROPERTY(EditAnywhere)
     TEnumAsByte<ECaptureStyle> captureStyle = ECaptureStyle::mono6;
@@ -40,9 +40,20 @@ public:
     UPROPERTY(EditAnywhere)
     bool tiff;
     UPROPERTY(EditAnywhere)
-    bool jpg;
+    bool jpg = true;
     UPROPERTY(EditAnywhere)
     bool png;
+    UPROPERTY(EditAnywhere)
+    bool bPathTracer = false;
+
+    UPROPERTY(EditAnywhere)
+    bool bResumeRender = false;
+
+    UPROPERTY(EditAnywhere)
+    int ResumeRenderStart = 0;
+
+    UPROPERTY(EditAnywhere)
+    int ResumeRenderEnd = 0;
 
     UFUNCTION(CallInEditor)
     void CreateMRQ();
@@ -62,10 +73,14 @@ private:
     FString BuildOutputString(int eye,FString layer);
     IConsoleVariable * pCvar = nullptr;
     ULevelSequence * zeroSequence = nullptr;
+    TObjectPtr<UMoviePipelineQueue> mrqdefault;
 #if ENGINE_MINOR_VERSION == 1
-	UMoviePipelineMasterConfig * moviePipelineMasterConfig = nullptr;
+    UMoviePipelineMasterConfig * moviePipelineMasterConfigVideo = nullptr;
+	
+	UMoviePipelineMasterConfig * moviePipelineMasterConfigVideoPathTracer = nullptr;
 #else //2
-	UMoviePipelinePrimaryConfig * moviePipelineMasterConfig = nullptr;
+	UMoviePipelinePrimaryConfig * moviePipelineMasterConfigVideo = nullptr;
+	UMoviePipelinePrimaryConfig * moviePipelineMasterConfigVideoPathTracer = nullptr;
 #endif
 	    
 };

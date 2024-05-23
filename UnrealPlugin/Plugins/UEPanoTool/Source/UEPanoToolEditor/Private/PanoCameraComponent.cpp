@@ -12,18 +12,34 @@
 #include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Camera/CameraActor.h"
+#include "MovieScene.h"
 
 UPanoCameraComponent::UPanoCameraComponent(){
 #if ENGINE_MINOR_VERSION == 1
-    static ConstructorHelpers::FObjectFinder<UMoviePipelineMasterConfig> renderconfig(TEXT("/UEPanoTool/Animation/renderconfigvideo"));
-	moviePipelineMasterConfig = renderconfig.Object;
+    
+	static ConstructorHelpers::FObjectFinder<UMoviePipelineMasterConfig> renderconfigvideo(TEXT("/UEPanoTool/Animation/renderconfigvideo"));
+	moviePipelineMasterConfigVideo = renderconfigvideo.Object;
+
+	
+	static ConstructorHelpers::FObjectFinder<UMoviePipelineMasterConfig> renderconfigvideoPathTracer(TEXT("/UEPanoTool/Animation/renderconfigvideoPathTracer"));
+	moviePipelineMasterConfigVideoPathTracer = renderconfigvideoPathTracer.Object;
+
 #else //2
-    static ConstructorHelpers::FObjectFinder<UMoviePipelinePrimaryConfig> renderconfig(TEXT("/UEPanoTool/Animation/renderconfigvideo"));
-	moviePipelineMasterConfig = renderconfig.Object;
+
+	static ConstructorHelpers::FObjectFinder<UMoviePipelinePrimaryConfig> renderconfigvideo(TEXT("/UEPanoTool/Animation/renderconfigvideo"));
+	moviePipelineMasterConfigVideo = renderconfigvideo.Object;
+
+
+	static ConstructorHelpers::FObjectFinder<UMoviePipelinePrimaryConfig> renderconfigvideoPathTracer(TEXT("/UEPanoTool/Animation/renderconfigvideoPathTracer"));
+	moviePipelineMasterConfigVideoPathTracer = renderconfigvideoPathTracer.Object;
 #endif
     
     static ConstructorHelpers::FObjectFinder<ULevelSequence> renderseq(TEXT("/UEPanoTool/Animation/zero"));
 	zeroSequence = renderseq.Object;
+
+    static ConstructorHelpers::FObjectFinder<UMoviePipelineQueue> mrqa(TEXT("/UEPanoTool/MRQ"));
+	mrqdefault = mrqa.Object;
+
 
     FString str;
     FString fPath = FPaths::Combine(FPaths::ProjectPluginsDir(), TEXT("UEPanoTool/Content/capturestyle.json"));
@@ -68,9 +84,10 @@ void UPanoCameraComponent::TestRenderCameraView(){
         //UEditorDialogLibrary::ShowMessage(FText().FromString(L"Error"),FText().FromString(L"PanoCameraComponent need Attach to camera"),EAppMsgType::Ok);
         return;
     }
-	CameraComponent->bConstrainAspectRatio = false;
+	CameraComponent->bConstrainAspectRatio = true;
+    CameraComponent->AspectRatio = captureConfig->data.basewidth*1.0/captureConfig->data.baseheight;
     CameraComponent->PostProcessSettings.AutoExposureMethod = EAutoExposureMethod::AEM_Manual;
-    CameraComponent->PostProcessSettings.AutoExposureBias = 10;
+    //CameraComponent->PostProcessSettings.AutoExposureBias = 10;
 	CameraComponent->PostProcessSettings.VignetteIntensity = 0;
 	CameraComponent->PostProcessSettings.MotionBlurAmount = 0;
 	CameraComponent->PostProcessSettings.LensFlareIntensity = 0;
@@ -85,6 +102,8 @@ void UPanoCameraComponent::TestRenderCameraView(){
 	CameraComponent->PostProcessSettings.bOverride_LensFlareIntensity = true;
 	CameraComponent->PostProcessSettings.bOverride_BloomIntensity = true;
 	CameraComponent->PostProcessSettings.bOverride_FilmGrainIntensity = true;
+    CameraComponent->bOverrideAspectRatioAxisConstraint = true;
+	CameraComponent->AspectRatioAxisConstraint = EAspectRatioAxisConstraint::AspectRatio_MaintainXFOV;
 
     SetupConfig();
 
@@ -108,6 +127,9 @@ void UPanoCameraComponent::TestRenderCameraView(){
 
 }
 void UPanoCameraComponent::CreateMRQ(){
+    if(!mrq){
+        mrq = mrqdefault;
+    }
     if(!mrq || !sequence){
         if(!mrq)
             UEditorDialogLibrary::ShowMessage(FText().FromString(L"Error"),FText().FromString(L"mrq can not found"),EAppMsgType::Ok);
@@ -118,46 +140,60 @@ void UPanoCameraComponent::CreateMRQ(){
     mrq->DeleteAllJobs();
     SetupConfig();
     
+    if(!bResumeRender){
+        ResumeRenderStart = 0;
+        ResumeRenderEnd = captureConfig->data.stereo?captureConfig->data.total*2:captureConfig->data.total;
+    }
 
     UWorld* World = GEditor->GetEditorWorldContext().World();
-    for (size_t i = 0; i <= captureConfig->data.total; i++)
+    for (size_t i = ResumeRenderStart; i <= ResumeRenderEnd; i++)
     {
+        
         UMoviePipelineExecutorJob* job = mrq->AllocateNewJob(UMoviePipelineExecutorJob::StaticClass());    
-        job->JobName = FString().Printf(L"phase (%d/%d)",i,captureConfig->data.total);
+        FString eye = captureConfig->data.GetEyeName(i-1);
+
         FString lname = World->GetCurrentLevel()->GetPathName();
         FString fname = "";
         FString sname = "";
         lname.Split(L":",&fname,&sname);
         job->Map = fname;
-        if(i==0){
-            job->Sequence = zeroSequence;
+        if(i==ResumeRenderStart){
+            job->SetSequence(zeroSequence);
+            job->JobName = L"phase Init";
         }else{
-            job->Sequence = sequence;
+            job->SetSequence(sequence);
+            job->JobName = FString().Printf(L"phase %s (%d/%d)",*eye,i,ResumeRenderEnd);
         }
         job->Author = "UEPanoTool";
         job->Comment =L"Automatically generated using UEPanoTool";
+        // auto info = new UMoviePipelineExecutorShot ();
+        
 #if ENGINE_MINOR_VERSION == 1
     UMoviePipelineMasterConfig* config = job->GetConfiguration();
 #else //2
     UMoviePipelinePrimaryConfig* config = job->GetConfiguration();
 #endif        
         
-        config->CopyFrom(moviePipelineMasterConfig);
+        config->CopyFrom(bPathTracer?moviePipelineMasterConfigVideoPathTracer:moviePipelineMasterConfigVideo);
         config->DisplayName = FString().Printf(L"config_%d",i);
         UMoviePipelineConsoleVariableSetting* cmdSetting = Cast<UMoviePipelineConsoleVariableSetting>(config->FindOrAddSettingByClass(UMoviePipelineConsoleVariableSetting::StaticClass()));
         
         cmdSetting->EndConsoleCommands.Empty();
         cmdSetting->EndConsoleCommands.Add(FString().Printf(L"pano.RenderIndex %d",i));
 
+
         UMoviePipelineOutputSetting* outputsetting = Cast<UMoviePipelineOutputSetting>(config->FindOrAddSettingByClass(UMoviePipelineOutputSetting::StaticClass()));
-        outputsetting->FileNameFormat = FString().Printf(L"center.%d.{frame_number}",i-1);
+        outputsetting->FileNameFormat = FString().Printf(L"%s.%d.{frame_number}",*eye,(i-1)%captureConfig->data.total);
         outputsetting->OutputResolution = FIntPoint(captureConfig->data.width,captureConfig->data.height);
         outputsetting->OutputDirectory.Path = FPaths::Combine(captureConfig->outputdir,L"MovieRenders");
+        
+
     }
     FString p = mrq->GetOutermost()->GetPathName();
     UEditorAssetLibrary::SaveAsset(p);
     GenStitch();
-    GEditor->GetEditorSubsystem<UAssetEditorSubsystem>()->OpenEditorForAsset(p);
+    GEngine->Exec( GetWorld(),* FString().Printf(L"pano.RenderIndex %d",ResumeRenderStart));
+    // GEditor->GetEditorSubsystem<UAssetEditorSubsystem>()->OpenEditorForAsset(p);
     
 }
 void UPanoCameraComponent::GenStitch(){
@@ -170,45 +206,49 @@ void UPanoCameraComponent::GenStitch(){
         }
         script += FString().Printf(L"plane s%d %f %f 0 %f %d %d\n",i,r.Z,r.Y,captureConfig->data.fov,captureConfig->data.width,captureConfig->data.height);
     }
-    TArray<FString> ls = GetLayerObj();
+    // TArray<FString> ls = GetLayerObj();
     script += FString().Printf(L"loop %d %d\n",captureConfig->startframe,captureConfig->endframe);
 
-    for (FString l : ls)
-    {
+    // for (FString l : ls)
+    // {
         
         for (int i = 0; i < captureConfig->data.total; i++){
             if(!captureConfig->IsFrontFace(i)){
                 continue;
             }
-            script += FString().Printf(L"input s%d MovieRenders/%s.%d%s.%%04d.png\n",i,*captureConfig->data.GetEyeName(i),i,*l);
+            script += FString().Printf(L"input s%d MovieRenders/%s.%d.%%04d.png\n",i,*captureConfig->data.GetEyeName(i),i);
         }
-        script += BuildOutputString(0,l);
+        script += BuildOutputString(0,"");
         script += FString().Printf(L"clear\n");
         if(captureConfig->data.stereo){
             for (int i = 0; i < captureConfig->data.total; i++){
                 if(!captureConfig->IsFrontFace(i)){
                     continue;
                 }
-                script += FString().Printf(L"input s%d MovieRenders/%s.%d%s.%%04d.png\n",i,*captureConfig->data.GetEyeName(i+captureConfig->data.total),i,*l);
+                script += FString().Printf(L"input s%d MovieRenders/%s.%d.%%04d.png\n",i,*captureConfig->data.GetEyeName(i+captureConfig->data.total),i);
             }
-            script += BuildOutputString(1,l);
+            script += BuildOutputString(captureConfig->data.total+1,"");
             script += FString().Printf(L"clear\n");
         }
-    }
+    // }
     
     script += FString().Printf(L"endloop\n");
     FString fPath = FPaths::Combine(captureConfig->outputdir,L"script.txt");
     FFileHelper::SaveStringToFile(script, *fPath);
 
     stitchcmd += FString().Printf(L"uestitch -script script.txt\n");
+    
     if(captureConfig->data.stereo){
         script = FString().Printf(L"width %d\nheight %d\n\n",captureConfig->data.outwidth,captureConfig->data.outheight*2);
-        script += FString().Printf(L"loop %d %d\n",captureConfig->startframe,captureConfig->endframe);
-        script += FString().Printf(L"background MovieRenders_output/left.%%04d.tif\n");
-        script += FString().Printf(L"background MovieRenders_output/right.%%04d.tif %d\n",captureConfig->data.outheight);
-        if(jpg)
-            script += FString().Printf(L"output MovieRenders_output/%%04d.jpg\n");
-        script += L"clear\n";
+        // for (FString l : ls){
+            script += FString().Printf(L"loop %d %d\n",captureConfig->startframe,captureConfig->endframe);
+            script += FString().Printf(L"background MovieRenders_output/left.%%04d.tif\n");
+            script += FString().Printf(L"background MovieRenders_output/right.%%04d.tif %d\n",captureConfig->data.outheight);
+            if(jpg)
+                script += FString().Printf(L"output MovieRenders_output/%%04d.jpg\n");
+            script += L"clear\n";
+        // }
+        
         script += L"endloop\n";
         fPath = FPaths::Combine(captureConfig->outputdir,L"scriptjoin.txt");
         FFileHelper::SaveStringToFile(script, *fPath);
@@ -224,37 +264,37 @@ void UPanoCameraComponent::GenStitch(){
 }
 FString UPanoCameraComponent::BuildOutputString(int eye,FString layer){
     FString script = FString();
-    if(tiff){
-        script += FString().Printf(L"output MovieRenders_output/%s%s.%%04d.tif\n",*captureConfig->data.GetEyeName(0),*layer);
+    if(tiff || captureConfig->data.stereo){
+        script += FString().Printf(L"output MovieRenders_output/%s%s.%%04d.tif\n",*captureConfig->data.GetEyeName(eye),*layer);
     }
     if(png){
-        script += FString().Printf(L"output MovieRenders_output/%s%s.%%04d.png\n",*captureConfig->data.GetEyeName(0),*layer);
+        script += FString().Printf(L"output MovieRenders_output/%s%s.%%04d.png\n",*captureConfig->data.GetEyeName(eye),*layer);
     }
     if(jpg){
-        script += FString().Printf(L"output MovieRenders_output/%s%s.%%04d.jpg\n",*captureConfig->data.GetEyeName(0),*layer);
+        script += FString().Printf(L"output MovieRenders_output/%s%s.%%04d.jpg\n",*captureConfig->data.GetEyeName(eye),*layer);
     }
     if(!tiff && !png && !jpg){
-        script += FString().Printf(L"output MovieRenders_output/%s%s.%%04d.jpg\n",*captureConfig->data.GetEyeName(0),*layer);
+        script += FString().Printf(L"output MovieRenders_output/%s%s.%%04d.jpg\n",*captureConfig->data.GetEyeName(eye),*layer);
     }
     return script;
 }
 TArray<FString> UPanoCameraComponent::GetLayerObj(){
     TArray<FString> ls = TArray<FString>();
-	UMoviePipelineDeferredPassBase * renderPassSetting = Cast<UMoviePipelineDeferredPassBase >(moviePipelineMasterConfig->FindOrAddSettingByClass(UMoviePipelineDeferredPassBase ::StaticClass()));
+	// UMoviePipelineDeferredPassBase * renderPassSetting = Cast<UMoviePipelineDeferredPassBase >(moviePipelineMasterConfig->FindOrAddSettingByClass(UMoviePipelineDeferredPassBase ::StaticClass()));
 	
-	for(FActorLayer l:renderPassSetting->ActorLayers){
-		ls.Add(L".FinalImage" + l.Name.ToString());
-	}
-	if(!renderPassSetting->ActorLayers.Num())
-		ls.Add(L"");
-	else{
-        if(renderPassSetting->bAddDefaultLayer){
-            ls.Add(L".FinalImageDefaultLayer");
-        }
-        if(renderPassSetting->bRenderMainPass){
+	// for(FActorLayer l:renderPassSetting->ActorLayers){
+	// 	ls.Add(L".FinalImage" + l.Name.ToString());
+	// }
+	// if(!renderPassSetting->ActorLayers.Num())
+	// 	ls.Add(L"");
+	// else{
+    //     if(renderPassSetting->bAddDefaultLayer){
+    //         ls.Add(L".FinalImageDefaultLayer");
+    //     }
+    //     if(renderPassSetting->bRenderMainPass){
             ls.Add(L".FinalImage");
-        }
-    }
+    //     }
+    // }
 	
 	return ls;
 }

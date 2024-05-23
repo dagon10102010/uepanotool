@@ -23,6 +23,7 @@
 			"Name": "SequencerScripting",
 			"Enabled": true
 		}
+		
 	],
 	"Modules": [
 		{

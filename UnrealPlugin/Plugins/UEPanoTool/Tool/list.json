@@ -1,36 +1,3 @@
 {
-	"data": [
-		{
-			"name": "BedRoom",
-			"pos":
-			{
-				"x": 2270,
-				"y": -730,
-				"z": 1940
-			},
-			"rot":
-			{
-				"x": -0,
-				"y": 0,
-				"z": 0
-			},
-			"capturerot": false
-		},
-		{
-			"name": "LivingRoom",
-			"pos":
-			{
-				"x": 2560,
-				"y": -230,
-				"z": 1930
-			},
-			"rot":
-			{
-				"x": -0,
-				"y": 0,
-				"z": 0
-			},
-			"capturerot": false
-		}
-	]
+	"data": []
 }
