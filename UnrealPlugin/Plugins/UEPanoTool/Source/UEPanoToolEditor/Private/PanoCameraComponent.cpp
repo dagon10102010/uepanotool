@@ -78,8 +78,10 @@ void UPanoCameraComponent::BeginPlay(){
     // TestRenderCameraView();
 }
 void UPanoCameraComponent::TestRenderCameraView(){
-    AActor* actor = this->GetAttachmentRootActor();
-    CameraComponent = Cast<UCameraComponent>(this->GetAttachmentRootActor()->GetComponentByClass(UCameraComponent::StaticClass()));
+    // AActor* actor = this->GetOwner();
+    // UE_LOG(LogTemp, Log,L"GetAttachmentRootActor==============>%s",*actor->GetActorNameOrLabel());
+
+    CameraComponent = Cast<UCameraComponent>(this->GetOwner()->GetComponentByClass(UCameraComponent::StaticClass()));
     if(!CameraComponent){
         //UEditorDialogLibrary::ShowMessage(FText().FromString(L"Error"),FText().FromString(L"PanoCameraComponent need Attach to camera"),EAppMsgType::Ok);
         return;
@@ -91,7 +93,8 @@ void UPanoCameraComponent::TestRenderCameraView(){
 	CameraComponent->PostProcessSettings.VignetteIntensity = 0;
 	CameraComponent->PostProcessSettings.MotionBlurAmount = 0;
 	CameraComponent->PostProcessSettings.LensFlareIntensity = 0;
-	CameraComponent->PostProcessSettings.BloomIntensity = 0.01;
+    if(CameraComponent->PostProcessSettings.BloomIntensity>0.01)
+	    CameraComponent->PostProcessSettings.BloomIntensity = 0.01;
 	CameraComponent->PostProcessSettings.FilmGrainIntensity = 0.0f;
 	CameraComponent->PostProcessSettings.ScreenSpaceReflectionIntensity = 0.0f;
 	CameraComponent->PostProcessSettings.bOverride_VignetteIntensity = true;
