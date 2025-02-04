@@ -80,7 +80,7 @@ FPanoPoint::FPanoPoint(APanoHotspot* hp){
 
 void FPanoPointList::Scan(UWorld*World){
     TArray<AActor*> FoundActors;
-    UGameplayStatics::GetAllActorsOfClass(World, APanoHotspot::StaticClass(), FoundActors);
+    // UGameplayStatics::GetAllActorsOfClass(World, APanoHotspot::StaticClass(), FoundActors);
     data.Empty();
     for (AActor* a : FoundActors){
         APanoHotspot* hp = Cast<APanoHotspot>(a);

@@ -7,6 +7,7 @@ public class UEPanoTool : ModuleRules
 	public UEPanoTool(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+		CppStandard = CppStandardVersion.Cpp20;
 		
 		PublicIncludePaths.AddRange(
 			new string[] {

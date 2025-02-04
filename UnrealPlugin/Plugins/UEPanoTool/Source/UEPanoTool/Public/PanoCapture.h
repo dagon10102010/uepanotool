@@ -9,11 +9,8 @@ class UCameraComponent;
 struct FPanoCaptureConfig;
 class UMoviePipelineQueueEngineSubsystem;
 class ULevelSequence;
-#if ENGINE_MINOR_VERSION == 1
-    class UMoviePipelineMasterConfig;
-#else //2
-	class UMoviePipelinePrimaryConfig;
-#endif
+
+class UMoviePipelinePrimaryConfig;
 
 
 UCLASS()
@@ -56,17 +53,11 @@ private:
 	ULevelSequence * levelSequence = nullptr;
 	ULevelSequence * levelSequenceVideo = nullptr;
 
-#if ENGINE_MINOR_VERSION == 1
-    UMoviePipelineMasterConfig * moviePipelineMasterConfigVideo = nullptr;
-	UMoviePipelineMasterConfig * moviePipelineMasterConfig = nullptr;
-	UMoviePipelineMasterConfig * moviePipelineMasterConfigVideoPathTracer = nullptr;
-	UMoviePipelineMasterConfig * moviePipelineMasterConfigPathTracer = nullptr;
-#else //2
+
 	UMoviePipelinePrimaryConfig * moviePipelineMasterConfigVideo = nullptr;
 	UMoviePipelinePrimaryConfig * moviePipelineMasterConfig = nullptr;
 	UMoviePipelinePrimaryConfig * moviePipelineMasterConfigVideoPathTracer = nullptr;
 	UMoviePipelinePrimaryConfig * moviePipelineMasterConfigPathTracer = nullptr;
-#endif
 	
 	int renderindex=0;
 	int facenum = 0;

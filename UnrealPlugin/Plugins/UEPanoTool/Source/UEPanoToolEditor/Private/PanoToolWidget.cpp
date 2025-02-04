@@ -3,6 +3,8 @@
 #include "LevelEditorViewport.h"
 #include "Widgets/Input/SSpinBox.h"
 #include "Widgets/Input/STextComboBox.h"
+#include "Widgets/Input/SEditableTextBox.h"
+#include "Widgets/Input/SCheckBox.h"
 #include "JsonObjectConverter.h"
 #include "Misc/FileHelper.h"
 #include "Kismet/GameplayStatics.h"
@@ -16,6 +18,7 @@
 #include "Sections/MovieSceneCameraCutSection.h"
 #include "Channels/MovieSceneChannelProxy.h"
 #include "EditorDialogLibrary.h"
+
 #define LOCTEXT_NAMESPACE "PanoTool"
 void SPanoToolWidget::Construct(const FArguments& InArgs){
     
@@ -635,9 +638,9 @@ void SPanoToolWidget::ResetSequence(){
     if(ms->GetCameraCutTrack()){
         ms->RemoveCameraCutTrack();
     }
-    TArray<UMovieSceneTrack*>tracks = ms->GetMasterTracks();
+    TArray<UMovieSceneTrack*>tracks = ms->GetTracks();
     for (UMovieSceneTrack* track: tracks){
-        ms->RemoveMasterTrack(*track);
+        ms->RemoveTrack(*track);
     }
     TArray<FMovieSceneBinding>binds = ms->GetBindings();
     for (FMovieSceneBinding bind: binds){
@@ -692,9 +695,9 @@ void SPanoToolWidget::GenSequence(){
     if(ms->GetCameraCutTrack()){
         ms->RemoveCameraCutTrack();
     }
-    TArray<UMovieSceneTrack*>tracks = ms->GetMasterTracks();
+    TArray<UMovieSceneTrack*>tracks = ms->GetTracks();
     for (UMovieSceneTrack* track: tracks){
-        ms->RemoveMasterTrack(*track);
+        ms->RemoveTrack (*track);
     }
     TArray<FMovieSceneBinding>binds = ms->GetBindings();
     for (FMovieSceneBinding bind: binds){

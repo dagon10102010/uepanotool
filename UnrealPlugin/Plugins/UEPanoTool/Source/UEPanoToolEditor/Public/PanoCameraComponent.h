@@ -10,11 +10,11 @@
 class UCameraComponent;
 class ULevelSequence;
 class UMoviePipelineQueue;
-#if ENGINE_MINOR_VERSION == 1
-    class UMoviePipelineMasterConfig;
-#else //2
+// #if ENGINE_MINOR_VERSION == 1
+//     class UMoviePipelineMasterConfig;
+// #else //2
 	class UMoviePipelinePrimaryConfig;
-#endif
+// #endif
 
 UCLASS(HideCategories=(Mobility, Rendering, LOD), Blueprintable, ClassGroup=Camera, meta=(BlueprintSpawnableComponent))
 class UEPANOTOOLEDITOR_API UPanoCameraComponent : public USceneComponent
@@ -74,13 +74,13 @@ private:
     IConsoleVariable * pCvar = nullptr;
     ULevelSequence * zeroSequence = nullptr;
     TObjectPtr<UMoviePipelineQueue> mrqdefault;
-#if ENGINE_MINOR_VERSION == 1
-    UMoviePipelineMasterConfig * moviePipelineMasterConfigVideo = nullptr;
+// #if ENGINE_MINOR_VERSION == 1
+//     UMoviePipelineMasterConfig * moviePipelineMasterConfigVideo = nullptr;
 	
-	UMoviePipelineMasterConfig * moviePipelineMasterConfigVideoPathTracer = nullptr;
-#else //2
+// 	UMoviePipelineMasterConfig * moviePipelineMasterConfigVideoPathTracer = nullptr;
+// #else //2
 	UMoviePipelinePrimaryConfig * moviePipelineMasterConfigVideo = nullptr;
 	UMoviePipelinePrimaryConfig * moviePipelineMasterConfigVideoPathTracer = nullptr;
-#endif
+// #endif
 	    
 };

@@ -7,6 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "MoviePipelineRenderPass.h"
 #include "MoviePipelineDeferredPasses.h"
+#include "LevelSequence.h"
 // Fill out your copyright notice in the Description page of Project Settings.
 // Sets default values
 APanoCapture::APanoCapture()
@@ -46,18 +47,7 @@ APanoCapture::APanoCapture()
 	levelSequence = renderseq.Object;
 	static ConstructorHelpers::FObjectFinder<ULevelSequence> renderseqvideo(TEXT("/UEPanoTool/Animation/renderseqvideo"));
 	levelSequenceVideo = renderseqvideo.Object;
-#if ENGINE_MINOR_VERSION == 1
-    static ConstructorHelpers::FObjectFinder<UMoviePipelineMasterConfig> renderconfig(TEXT("/UEPanoTool/Animation/renderconfig"));
-	moviePipelineMasterConfig = renderconfig.Object;
-	static ConstructorHelpers::FObjectFinder<UMoviePipelineMasterConfig> renderconfigvideo(TEXT("/UEPanoTool/Animation/renderconfigvideo"));
-	moviePipelineMasterConfigVideo = renderconfigvideo.Object;
 
-	static ConstructorHelpers::FObjectFinder<UMoviePipelineMasterConfig> renderconfigPathTracer(TEXT("/UEPanoTool/Animation/renderconfigPathTracer"));
-	moviePipelineMasterConfigPathTracer = renderconfigPathTracer.Object;
-	static ConstructorHelpers::FObjectFinder<UMoviePipelineMasterConfig> renderconfigvideoPathTracer(TEXT("/UEPanoTool/Animation/renderconfigvideoPathTracer"));
-	moviePipelineMasterConfigVideoPathTracer = renderconfigvideoPathTracer.Object;
-
-#else //2
 	static ConstructorHelpers::FObjectFinder<UMoviePipelinePrimaryConfig> renderconfig(TEXT("/UEPanoTool/Animation/renderconfig"));
 	moviePipelineMasterConfig = renderconfig.Object;
 	static ConstructorHelpers::FObjectFinder<UMoviePipelinePrimaryConfig> renderconfigvideo(TEXT("/UEPanoTool/Animation/renderconfigvideo"));
@@ -67,7 +57,6 @@ APanoCapture::APanoCapture()
 	moviePipelineMasterConfigPathTracer = renderconfigPathTracer.Object;
 	static ConstructorHelpers::FObjectFinder<UMoviePipelinePrimaryConfig> renderconfigvideoPathTracer(TEXT("/UEPanoTool/Animation/renderconfigvideoPathTracer"));
 	moviePipelineMasterConfigVideoPathTracer = renderconfigvideoPathTracer.Object;
-#endif
 	
 }
 

@@ -13,18 +13,10 @@
 #include "Kismet/GameplayStatics.h"
 #include "Camera/CameraActor.h"
 #include "MovieScene.h"
+#include "LevelSequence.h"
 
 UPanoCameraComponent::UPanoCameraComponent(){
-#if ENGINE_MINOR_VERSION == 1
-    
-	static ConstructorHelpers::FObjectFinder<UMoviePipelineMasterConfig> renderconfigvideo(TEXT("/UEPanoTool/Animation/renderconfigvideo"));
-	moviePipelineMasterConfigVideo = renderconfigvideo.Object;
 
-	
-	static ConstructorHelpers::FObjectFinder<UMoviePipelineMasterConfig> renderconfigvideoPathTracer(TEXT("/UEPanoTool/Animation/renderconfigvideoPathTracer"));
-	moviePipelineMasterConfigVideoPathTracer = renderconfigvideoPathTracer.Object;
-
-#else //2
 
 	static ConstructorHelpers::FObjectFinder<UMoviePipelinePrimaryConfig> renderconfigvideo(TEXT("/UEPanoTool/Animation/renderconfigvideo"));
 	moviePipelineMasterConfigVideo = renderconfigvideo.Object;
@@ -32,7 +24,6 @@ UPanoCameraComponent::UPanoCameraComponent(){
 
 	static ConstructorHelpers::FObjectFinder<UMoviePipelinePrimaryConfig> renderconfigvideoPathTracer(TEXT("/UEPanoTool/Animation/renderconfigvideoPathTracer"));
 	moviePipelineMasterConfigVideoPathTracer = renderconfigvideoPathTracer.Object;
-#endif
     
     static ConstructorHelpers::FObjectFinder<ULevelSequence> renderseq(TEXT("/UEPanoTool/Animation/zero"));
 	zeroSequence = renderseq.Object;

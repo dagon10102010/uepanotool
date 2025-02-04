@@ -20,33 +20,10 @@ public:
 	bool CaptureRotation = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bSkip = false;
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	// 	FString panoname = TEXT("");
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	// 	FString profile = TEXT("");
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	// 	FString cate = TEXT("");
-	// // UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	// // 	float camheight = 1.5f;
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	// 	TArray<FString>links;
-	// UFUNCTION()	
-	// void UpdateLink(TArray<AStreetViewPoint*> ls);
-	// UFUNCTION(BlueprintCallable, CallInEditor)
-	// void RenewGUID();
-
-	// UFUNCTION(BlueprintCallable)
-	// void LinkTo(TArray<AActor*> ls);
-
-	// TArray<AStreetViewPoint*> linksactor;
+	
 protected:
 
 	
-	// FColor linkdebugcolor = FColor(0,255,0);
-	// // Called when the game starts or when spawned
-	// virtual bool ShouldTickIfViewportsOnly() const override {
-	// 	return true;
-	// }
 	// virtual void Tick( float DeltaSeconds ) override;
 private:
 	UPROPERTY()
